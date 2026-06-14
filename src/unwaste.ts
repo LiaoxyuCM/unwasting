@@ -3,7 +3,7 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
   let cells: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let cells_used: boolean[] = [true, false, false, false, false, false, false, false, false, false];
   let result = '';
-  if (uniqueResult) { result += '0#' };
+  if (uniqueResult) { result += '0#' }
   str.split('').forEach((chr) => {
     chars.push(chr.charCodeAt(0));
   });
@@ -38,7 +38,7 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
         cells_used[mostCloseIndex] = true;
         result += "#";
       }
-    };
+    }
     lastMostCloseIndex = mostCloseIndex;
 
     const opr: string = mostClose > 0 ? '-' : '+';
