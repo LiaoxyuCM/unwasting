@@ -1,4 +1,4 @@
-export default function unwaste_compile(str: string, uniqueResult: boolean = true) {
+export default function unwaste_compile(str: string, uniqueResult: boolean = true): string {
   let chars: number[] = [];
   let cells: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let cells_used: boolean[] = [true, false, false, false, false, false, false, false, false, false];
