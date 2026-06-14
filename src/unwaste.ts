@@ -44,7 +44,7 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
     const opr: string = mostClose > 0 ? '-' : '+';
     let numa: number = Math.abs(mostClose);
 
-    if (numa >= 2 && numa <= 5) {
+    if (numa <= 7) {
       result += opr.repeat(numa);
     } else {
       let snuma: string[] = numa.toString(2).split('')
