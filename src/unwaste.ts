@@ -19,19 +19,23 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
       snippetCnt += 1;
     }
 
-    let binSnippetCnt: string[] = snippetCnt.toString(2).split("");
-    let last: string | undefined = binSnippetCnt.pop();
-    result += "[".repeat(binSnippetCnt.length);
+    if (lastSnippet.length == 1 && snippetCnt <= 7) {
+      result += lastSnippet.repeat(snippetCnt);
+    } else {
+      let binSnippetCnt: string[] = snippetCnt.toString(2).split("");
+      let last: string | undefined = binSnippetCnt.pop();
+      result += "[".repeat(binSnippetCnt.length);
 
-    binSnippetCnt.forEach((car) => {
-      if (car == "1") {
-        result += lastSnippet + "]";
-      } else {
-        result += "]";
+      binSnippetCnt.forEach((car) => {
+        if (car == "1") {
+          result += lastSnippet + "]";
+        } else {
+          result += "]";
+        }
+      });
+      if (last == "1") {
+        result += lastSnippet;
       }
-    });
-    if (last == "1") {
-      result += lastSnippet;
     }
   }
 
@@ -62,11 +66,12 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
       cellIndex += 1;
     });
 
+    snippet = "";
     if (lastMostCloseIndex != mostCloseIndex) {
-      result += String(mostCloseIndex);
+      snippet += String(mostCloseIndex);
       if (uniqueResult && (!cells_used[mostCloseIndex])) {
         cells_used[mostCloseIndex] = true;
-        result += "#";
+        snippet += "#";
       }
     }
     lastMostCloseIndex = mostCloseIndex;
@@ -74,7 +79,6 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
     const opr: string = mostClose > 0 ? "-" : "+";
     let numa: number = Math.abs(mostClose);
 
-    snippet = "";
 
     if (numa <= 7) {
       snippet += opr.repeat(numa);
@@ -102,11 +106,7 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
       snippetCnt += 1;
     } else {
       if (lastSnippet != "") {
-        if (lastSnippet.length == 1 && snippetCnt <= 7) {
-          result += lastSnippet.repeat(snippetCnt);
-        } else {
-          handleSnippet();
-        }
+        handleSnippet();
       }
       snippetCnt = 1;
       lastSnippet = snippet;
