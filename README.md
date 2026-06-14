@@ -18,3 +18,9 @@
 npm install
 npm run build
 ```
+
+### TS-Node
+
+等下，你其实最好跑一下上面命令，因为ts-node在生产环境没用所以action不会装
+
+它的用途就是帮你跑一下`test/index.ts`里面的测试

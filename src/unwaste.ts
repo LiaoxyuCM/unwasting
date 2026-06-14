@@ -8,7 +8,32 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
     chars.push(chr.charCodeAt(0));
   });
   let lastMostCloseIndex: number = 0;
+  let snippet: string = "";
+  let lastSnippet: string = "";
+  let snippetCnt: number = 1;
   let mostCloseIdxType: string = ".";
+
+  function handleSnippet() {
+    if (result.endsWith(lastSnippet)) {
+      result = result.slice(0, -lastSnippet.length);
+      snippetCnt += 1;
+    }
+
+    let binSnippetCnt: string[] = snippetCnt.toString(2).split("");
+    let last: string | undefined = binSnippetCnt.pop();
+    result += "[".repeat(binSnippetCnt.length);
+
+    binSnippetCnt.forEach((car) => {
+      if (car == "1") {
+        result += lastSnippet + "]";
+      } else {
+        result += "]";
+      }
+    });
+    if (last == "1") {
+      result += lastSnippet;
+    }
+  }
 
   chars.forEach((num) => {
     if (num == 10) {
@@ -49,27 +74,44 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
     const opr: string = mostClose > 0 ? "-" : "+";
     let numa: number = Math.abs(mostClose);
 
+    snippet = "";
+
     if (numa <= 7) {
-      result += opr.repeat(numa);
+      snippet += opr.repeat(numa);
     } else {
       let snuma: string[] = numa.toString(2).split("")
-      result += "[".repeat(snuma.length - 1);
       let last: string | undefined = snuma.pop();
+      snippet += "[".repeat(snuma.length);
 
       snuma.forEach((car) => {
         if (car == "1") {
-          result += opr + "]";
+          snippet += opr + "]";
         } else {
-          result += "]";
+          snippet += "]";
         }
       });
       if (last == "1") {
-        result += opr;
+        snippet += opr;
       }
     }
 
     cells[mostCloseIndex] = mostCloseIdxType == "." ? num : parseInt(String.fromCharCode(num));
-    result += mostCloseIdxType;
+    snippet += mostCloseIdxType;
+
+    if (snippet == lastSnippet) {
+      snippetCnt += 1;
+    } else {
+      if (lastSnippet != "") {
+        if (lastSnippet.length == 1 && snippetCnt <= 7) {
+          result += lastSnippet.repeat(snippetCnt);
+        } else {
+          handleSnippet();
+        }
+      }
+      snippetCnt = 1;
+      lastSnippet = snippet;
+    }
   })
+  handleSnippet();
   return result;
 }
