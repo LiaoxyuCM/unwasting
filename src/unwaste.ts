@@ -11,6 +11,11 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
   let mostCloseIdxType: string = '.';
 
   chars.forEach((num) => {
+    if (num == 10) {
+      result += ":";
+      return;
+    }
+
     // find the most close number in these cells
     let cellIndex: number = 0;
     let mostClose: number = Number.MAX_VALUE;
