@@ -2,13 +2,13 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
   let chars: number[] = [];
   let cells: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let cells_used: boolean[] = [true, false, false, false, false, false, false, false, false, false];
-  let result = '';
-  if (uniqueResult) { result += '0#' }
-  str.split('').forEach((chr) => {
+  let result = "";
+  if (uniqueResult) { result += "0#" }
+  str.split("").forEach((chr) => {
     chars.push(chr.charCodeAt(0));
   });
   let lastMostCloseIndex: number = 0;
-  let mostCloseIdxType: string = '.';
+  let mostCloseIdxType: string = ".";
 
   chars.forEach((num) => {
     if (num == 10) {
@@ -24,14 +24,14 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
       if (Math.abs(cellnum - num) < Math.abs(mostClose)) {
         mostClose = cellnum - num;
         mostCloseIndex = cellIndex;
-        mostCloseIdxType = '.';
+        mostCloseIdxType = ".";
       }
       if (!isNaN(parseInt(String.fromCharCode(num)))) {
         const charnum = parseInt(String.fromCharCode(num));
         if (Math.abs(cellnum - charnum) < Math.abs(mostClose)) {
           mostClose = cellnum - charnum;
           mostCloseIndex = cellIndex;
-          mostCloseIdxType = '%';
+          mostCloseIdxType = "%";
         }
       }
       cellIndex += 1;
@@ -46,29 +46,29 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
     }
     lastMostCloseIndex = mostCloseIndex;
 
-    const opr: string = mostClose > 0 ? '-' : '+';
+    const opr: string = mostClose > 0 ? "-" : "+";
     let numa: number = Math.abs(mostClose);
 
     if (numa <= 7) {
       result += opr.repeat(numa);
     } else {
-      let snuma: string[] = numa.toString(2).split('')
-      result += '['.repeat(snuma.length - 1);
+      let snuma: string[] = numa.toString(2).split("")
+      result += "[".repeat(snuma.length - 1);
       let last: string | undefined = snuma.pop();
 
       snuma.forEach((car) => {
-        if (car == '1') {
-          result += opr + ']';
+        if (car == "1") {
+          result += opr + "]";
         } else {
-          result += ']';
+          result += "]";
         }
       });
-      if (last == '1') {
+      if (last == "1") {
         result += opr;
       }
     }
 
-    cells[mostCloseIndex] = mostCloseIdxType == '.' ? num : parseInt(String.fromCharCode(num));
+    cells[mostCloseIndex] = mostCloseIdxType == "." ? num : parseInt(String.fromCharCode(num));
     result += mostCloseIdxType;
   })
   return result;
