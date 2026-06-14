@@ -40,68 +40,67 @@ export default function unwaste_compile(str: string, uniqueResult: boolean = tru
   }
 
   chars.forEach((num) => {
-    if (num == 10) {
-      result += ":";
-      return;
-    }
-
-    // find the most close number in these cells
-    let cellIndex: number = 0;
-    let mostClose: number = Number.MAX_VALUE;
-    let mostCloseIndex: number = 0;
-    cells.forEach((cellnum) => {
-      if (Math.abs(cellnum - num) < Math.abs(mostClose)) {
-        mostClose = cellnum - num;
-        mostCloseIndex = cellIndex;
-        mostCloseIdxType = ".";
-      }
-      if (!isNaN(parseInt(String.fromCharCode(num)))) {
-        const charnum = parseInt(String.fromCharCode(num));
-        if (Math.abs(cellnum - charnum) < Math.abs(mostClose)) {
-          mostClose = cellnum - charnum;
-          mostCloseIndex = cellIndex;
-          mostCloseIdxType = "%";
-        }
-      }
-      cellIndex += 1;
-    });
-
     snippet = "";
-    if (lastMostCloseIndex != mostCloseIndex) {
-      snippet += String(mostCloseIndex);
-      if (uniqueResult && (!cells_used[mostCloseIndex])) {
-        cells_used[mostCloseIndex] = true;
-        snippet += "#";
-      }
-    }
-    lastMostCloseIndex = mostCloseIndex;
 
-    const opr: string = mostClose > 0 ? "-" : "+";
-    let numa: number = Math.abs(mostClose);
-
-
-    if (numa <= 7) {
-      snippet += opr.repeat(numa);
+    if (num == 10) {
+      snippet += ":";
     } else {
-      let snuma: string[] = numa.toString(2).split("")
-      let last: string | undefined = snuma.pop();
-      snippet += "[".repeat(snuma.length);
-
-      snuma.forEach((car) => {
-        if (car == "1") {
-          snippet += opr + "]";
-        } else {
-          snippet += "]";
+      // find the most close number in these cells
+      let cellIndex: number = 0;
+      let mostClose: number = Number.MAX_VALUE;
+      let mostCloseIndex: number = 0;
+      cells.forEach((cellnum) => {
+        if (Math.abs(cellnum - num) < Math.abs(mostClose)) {
+          mostClose = cellnum - num;
+          mostCloseIndex = cellIndex;
+          mostCloseIdxType = ".";
         }
+        if (!isNaN(parseInt(String.fromCharCode(num)))) {
+          const charnum = parseInt(String.fromCharCode(num));
+          if (Math.abs(cellnum - charnum) < Math.abs(mostClose)) {
+            mostClose = cellnum - charnum;
+            mostCloseIndex = cellIndex;
+            mostCloseIdxType = "%";
+          }
+        }
+        cellIndex += 1;
       });
-      if (last == "1") {
-        snippet += opr;
+
+      if (lastMostCloseIndex != mostCloseIndex) {
+        snippet += String(mostCloseIndex);
+        if (uniqueResult && (!cells_used[mostCloseIndex])) {
+          cells_used[mostCloseIndex] = true;
+          snippet += "#";
+        }
       }
+      lastMostCloseIndex = mostCloseIndex;
+
+      const opr: string = mostClose > 0 ? "-" : "+";
+      let numa: number = Math.abs(mostClose);
+
+
+      if (numa <= 7) {
+        snippet += opr.repeat(numa);
+      } else {
+        let snuma: string[] = numa.toString(2).split("")
+        let last: string | undefined = snuma.pop();
+        snippet += "[".repeat(snuma.length);
+
+        snuma.forEach((car) => {
+          if (car == "1") {
+            snippet += opr + "]";
+          } else {
+            snippet += "]";
+          }
+        });
+        if (last == "1") {
+          snippet += opr;
+        }
+      }
+
+      cells[mostCloseIndex] = mostCloseIdxType == "." ? num : parseInt(String.fromCharCode(num));
+      snippet += mostCloseIdxType;
     }
-
-    cells[mostCloseIndex] = mostCloseIdxType == "." ? num : parseInt(String.fromCharCode(num));
-    snippet += mostCloseIdxType;
-
     if (snippet == lastSnippet) {
       snippetCnt += 1;
     } else {
